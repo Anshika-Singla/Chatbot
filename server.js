@@ -1,11 +1,13 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import { GoogleGenAI } from "@google/genai";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 // Initialize Gemini
 const ai = new GoogleGenAI({
@@ -17,27 +19,19 @@ app.post("/chat", async (req, res) => {
   try {
     const { question } = req.body;
 
-    // Send request to Gemini
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash-preview", // correct model
+      model: "gemini-1.5-flash", // ✅ FIXED MODEL
       contents: `You are a placement preparation assistant.
-Only answer questions related to:
-- Data Structures
-- Algorithms
-- Core Subjects
-- Aptitude
-- Resume
-- Interviews
-
-If question is unrelated, politely refuse.
+Only answer questions related to placement.
 
 Question: ${question}`
     });
 
-    // Send response back
-    res.json({
-      reply: response.text,
-    });
+    const reply =
+      response.text ||
+      response.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    res.json({ reply });
 
   } catch (error) {
     console.log("ERROR:", error);
@@ -47,7 +41,6 @@ Question: ${question}`
   }
 });
 
-// Start server
 app.listen(5000, () => {
   console.log("Server started on port 5000");
 });
