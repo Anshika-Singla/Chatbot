@@ -19,7 +19,7 @@ app.post("/chat", async (req, res) => {
 
     // Send request to Gemini
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash-preview", // correct model
+      model: "gemini-2.5-pro-preview", // correct model
       contents: `You are a placement preparation assistant.
 Only answer questions related to:
 - Data Structures
