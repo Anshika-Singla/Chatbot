@@ -14,13 +14,15 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
+console.log("USING NEW GEMINI SDK");
+
 // Chatbot API
 app.post("/chat", async (req, res) => {
   try {
     const { question } = req.body;
 
     const response = await ai.models.generateContent({
-      model: "gemini-1.5-flash", // ✅ FIXED MODEL
+      model: "gemini-1.5-flash-preview", // ✅ FIXED MODEL
       contents: `You are a placement preparation assistant.
 Only answer questions related to placement.
 
